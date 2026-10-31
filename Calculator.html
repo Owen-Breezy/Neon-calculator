@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scientific Calculator PRO-X</title>
+  
+</head>
+<body>
+  <style>
+    :root {
+  --text: #e0e0e0;
+  --text-main: #f5f5f5;
+  --accent: #00d4ff;
+  --neon-purple: #b347ff;
+  --primary: #00d4ff;
+  --primary-dark: #7b2fff;
+  --btn-num: rgba(255, 255, 255, 0.08);
+  --btn-sci: rgba(179, 71, 255, 0.12);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0a0a1a 0%, #1a0a2e 100%);
+}
+
+.calculator-glass {
+  width: 360px;
+  padding: 25px;
+  background: rgba(20, 20, 35, 0.6);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+}
+
+.brand {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  color: var(--text);
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+}
+
+.model-badge {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.display-wrapper {
+  margin-bottom: 20px;
+}
+
+.history-display {
+  min-height: 25px;
+  text-align: right;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 1rem;
+  margin-bottom: 5px;
+  padding-right: 10px;
+}
+
+.input-display {
+  width: 100%;
+  padding: 20px;
+  font-size: 2.5rem;
+  font-weight: 500;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+  margin-bottom: 20px;
+  border-radius: 12px;
+  text-align: right;
+  outline: none;
+  transition: all 0.3s ease;
+  letter-spacing: 1px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.input-display:focus {
+  border-color: var(--accent);
+  background: rgba(0, 212, 255, 0.08);
+}
+
+.buttons-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.btn {
+  border: none;
+  outline: none;
+  height: 48px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-main);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn-num {
+  background: var(--btn-num);
+}
+
+.btn-num:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.btn-sci {
+  background: var(--btn-sci);
+  color: var(--neon-purple);
+  font-size: 0.9rem;
+}
+
+.btn-op {
+  background: rgba(0, 212, 255, 0.15);
+  color: var(--accent);
+}
+
+.btn-equal {
+  grid-column: span 5;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.btn-equal:hover {
+  box-shadow: 0 12px 30px rgba(0, 212, 255, 0.4);
+  transform: translateY(-3px);
+}
+  </style>
+<div class="calculator-glass">
+  <div class="brand">
+    <span>SCIENTIFIC</span>
+    <div class="model-badge">PRO-X</div>
+  </div>
+  <div class="display-wrapper">
+    <div class="history-display" id="history"></div>
+    <div class="input-display" id="display">0</div>
+    <input type="hidden" id="display-input" value="0">
+  </div>
+  <div class="buttons-grid">
+    <button class="btn btn-sci" onclick="pushSymbol('(')">(</button>
+    <button class="btn btn-sci" onclick="pushSymbol(')')">)</button>
+    <button class="btn btn-sci" onclick="clearDisplay()">AC</button>
+    <button class="btn btn-sci" onclick="backspace()">DEL</button>
+    <button class="btn btn-sci" onclick="pushSymbol('%')">%</button>
+
+    <button class="btn btn-sci" onclick="pushFunction('sin(')">sin</button>
+    <button class="btn btn-sci" onclick="pushFunction('cos(')">cos</button>
+    <button class="btn btn-sci" onclick="pushFunction('tan(')">tan</button>
+    <button class="btn btn-sci" onclick="pushFunction('log(')">log</button>
+    <button class="btn btn-sci" onclick="pushFunction('ln(')">ln</button>
+
+    <button class="btn btn-sci" onclick="pushFunction('sqrt(')">√</button>
+    <button class="btn btn-sci" onclick="pushSymbol('^')">x^y</button>
+    <button class="btn btn-sci" onclick="pushSymbol('π')">π</button>
+    <button class="btn btn-sci" onclick="pushSymbol('e')">e</button>
+    <button class="btn btn-sci" onclick="pushSymbol('EXP')">EXP</button>
+
+    <button class="btn btn-num" onclick="pushSymbol('7')">7</button>
+    <button class="btn btn-num" onclick="pushSymbol('8')">8</button>
+    <button class="btn btn-num" onclick="pushSymbol('9')">9</button>
+    <button class="btn btn-op" onclick="pushSymbol('*')">×</button>
+    <button class="btn btn-op" onclick="pushSymbol('/')">÷</button>
+
+    <button class="btn btn-num" onclick="pushSymbol('4')">4</button>
+    <button class="btn btn-num" onclick="pushSymbol('5')">5</button>
+    <button class="btn btn-num" onclick="pushSymbol('6')">6</button>
+    <button class="btn btn-op" onclick="pushSymbol('+')">+</button>
+    <button class="btn btn-op" onclick="pushSymbol('-')">−</button>
+
+    <button class="btn btn-num" onclick="pushSymbol('1')">1</button>
+    <button class="btn btn-num" onclick="pushSymbol('2')">2</button>
+    <button class="btn btn-num" onclick="pushSymbol('3')">3</button>
+    <button class="btn btn-num" onclick="pushSymbol('0')">0</button>
+    <button class="btn btn-num" onclick="pushSymbol('.')">.</button>
+
+    <button class="btn btn-equal" onclick="calculate()">=</button>
+  </div>
+</div>
+<script>
+let currentInput = '0';
+let shouldResetDisplay = false;
+let historyText = '';
+
+const display = document.getElementById('display');
+const historyDisplay = document.getElementById('history');
+
+const FUNC_MAP = {
+  sin: 'Math.sin(', cos: 'Math.cos(', tan: 'Math.tan(',
+  log: 'Math.log10(', ln: 'Math.log(', sqrt: 'Math.sqrt('
+};
+
+function pretty(text) {
+  return text.replace(/\*/g, '×').replace(/\//g, '÷').replace(/sqrt\(/g, '√(');
+}
+
+function updateDisplay() {
+  display.textContent = pretty(currentInput);
+}
+
+function pushSymbol(symbol) {
+  if (symbol === 'EXP') symbol = '*10^';
+  const isOperator = ['+', '-', '*', '/', '^', '%', '*10^'].includes(symbol);
+
+  if (shouldResetDisplay) {
+    // after a result: operators continue from it, anything else starts fresh
+    if (!isOperator) currentInput = '0';
+    shouldResetDisplay = false;
+  }
+
+  // only one decimal point per number
+  if (symbol === '.' && /\.\d*$/.test(currentInput)) return;
+
+  if (isOperator && symbol !== '%' && symbol !== '*10^' && /[+\-*/^]$/.test(currentInput)) {
+    // allow a negative sign after * / ^, otherwise swap the old operator
+    if (!(symbol === '-' && /[*/^]$/.test(currentInput))) {
+      currentInput = currentInput.slice(0, -1);
+    }
+  }
+
+  if (currentInput === '0' && /^[πe(]$/.test(symbol)) {
+    currentInput = '';
+  } else if (/^\d$/.test(symbol) && /(^|[^\d.])0$/.test(currentInput)) {
+    currentInput = currentInput.slice(0, -1); // no leading zeros like 05
+  }
+
+  currentInput += symbol;
+  updateDisplay();
+}
+
+function pushFunction(func) {
+  if (currentInput === '0' || shouldResetDisplay) {
+    currentInput = func;
+    shouldResetDisplay = false;
+  } else {
+    currentInput += func;
+  }
+  updateDisplay();
+}
+
+function calculate() {
+  try {
+    let expr = currentInput;
+
+    // close any open brackets
+    const open = (expr.match(/\(/g) || []).length;
+    const close = (expr.match(/\)/g) || []).length;
+    if (open > close) expr += ')'.repeat(open - close);
+
+    historyText = pretty(expr) + ' =';
+
+    expr = expr
+      // implicit multiplication: 2π, 3(4), 2sin(30), (1+2)(3+4)
+      .replace(/(\d|\)|π|e)(?=(?:sin|cos|tan|log|ln|sqrt)\(|\(|π|e)/g, '$1*')
+      .replace(/(\)|π|e)(?=\d)/g, '$1*')
+      // no leading zeros (strict mode rejects 05)
+      .replace(/(^|[^\d.])0+(?=\d)/g, '$1')
+      // constants
+      .replace(/e/g, '(Math.E)')
+      .replace(/π/g, '(Math.PI)')
+      // functions
+      .replace(/\b(sin|cos|tan|log|ln|sqrt)\(/g, (m, f) => FUNC_MAP[f])
+      .replace(/%/g, '/100')
+      .replace(/\^/g, '**');
+
+    let result = Function('"use strict";return (' + expr + ')')();
+    if (typeof result !== 'number' || !isFinite(result)) throw new Error('bad result');
+
+    result = parseFloat(result.toPrecision(12)); // 0.1+0.2 -> 0.3
+    // keep huge/tiny numbers from containing an "e" that means Euler's number
+    currentInput = String(result).replace(/e\+?(-?\d+)/, '*10^$1');
+
+    historyDisplay.textContent = historyText;
+    shouldResetDisplay = true;
+    updateDisplay();
+  } catch (error) {
+    historyDisplay.textContent = '';
+    display.textContent = 'Error';
+    currentInput = '0';
+    shouldResetDisplay = true;
+  }
+}
+
+function clearDisplay() {
+  currentInput = '0';
+  historyText = '';
+  shouldResetDisplay = false;
+  historyDisplay.textContent = '';
+  updateDisplay();
+}
+
+function backspace() {
+  const token = currentInput.match(/(sin\(|cos\(|tan\(|log\(|ln\(|sqrt\(|\*10\^)$/);
+  currentInput = currentInput.slice(0, token ? -token[0].length : -1);
+  if (currentInput === '') currentInput = '0';
+  updateDisplay();
+}
+</script>
+</body>
+</html>
